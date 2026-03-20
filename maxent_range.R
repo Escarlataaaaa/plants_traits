@@ -2,13 +2,14 @@ library(raster)
 library(ncdf4)
 library(data.table)
 
+setwd("~/Desktop/Plants Trait Project")
 dataset <- "basic"
 species_csv <- "plant_genome/plant_genome.csv"
 format <- "default"
-path <- "."
-output_dir <- "extracted_ranges"
+path <- "~/Desktop/Plants Trait Project"
+output_dir <- "maxent_range/extracted_ranges"
 
-output_csv <- file.path(output_dir, "final_extracted_areas.csv")
+output_csv <- file.path(output_dir, "final_extracted_areas_equal_sens_spec.csv")
 
 if (!dir.exists(output_dir)) {dir.create(output_dir)}
 
@@ -60,18 +61,20 @@ for (i in seq_along(species_list)) {
       # using the threshold where sensitivity and specificity are equal 
       idx <- unname(name_to_idx[sp])
       threshold <- metadata$cutoff.equal.sens.spec[idx] 
+      if (!is.finite(threshold)) threshold <- 0
       
-      native_layer <- ras_cropped[["Native_region"]]
-      maxent_layer <- ras_cropped[["Maxent_prediction"]]
+      native_layer <- ras_cropped[[1]]
+      maxent_layer <- ras_cropped[[2]]
       
       # identify where maxent meets the threshold
       is_suitable <- maxent_layer >= threshold
       
       # identify native regions (assuming 1 = native, adjust if the dataset uses >0)
-      is_native <- native_layer == 1 
+      is_native <- native_layer > 0
       
       # multiply to combine masks: 1 only where BOTH are true, 0 otherwise
       binary_map <- is_suitable * is_native
+      binary_map[is.na(binary_map)] <- 0
       
       # calculate cell areas
       cell_areas_km2 <- area(binary_map)
@@ -101,3 +104,20 @@ for (i in seq_along(species_list)) {
 final_results <- do.call(rbind, results_list)
 write.csv(final_results, output_csv, row.names = FALSE)
 
+
+
+#debug
+sp <- "ficus carica"  # change to one of the 0-area species
+sp <- tolower(sp)
+
+ras <- read_data(sp, c("Native region","Maxent prediction"), path, dataset, format)
+native_layer <- ras[[1]]
+maxent_layer <- ras[[2]]
+
+idx <- unname(name_to_idx[sp])
+threshold <- metadata$cutoff.no.omission[idx]
+
+cat("threshold:", threshold, "\n")
+cat("maxent min/max:", cellStats(maxent_layer, "min", na.rm=TRUE), cellStats(maxent_layer, "max", na.rm=TRUE), "\n")
+cat("native cells:", cellStats(native_layer > 0, "sum", na.rm=TRUE), "\n")
+cat("cells >= threshold & native:", cellStats((maxent_layer >= threshold) * (native_layer > 0), "sum", na.rm=TRUE), "\n")
