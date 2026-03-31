@@ -4,7 +4,7 @@
 - **[cleaning](plant_traits/cleaning/)**
   Compilation of files of cleaning different datasets.
 
-- **[ssd_and_wood_density](plant_traits/ssd_and_wood_density.ipynb)**
+- **[ssd_and_wood_density](plant_traits/SSD_vs_wood_density.ipynb)**
   Compare whether we can combine ssd and wood density as one trait.
   
 - **[meta_trait_dataset](plant_traits/meta_trait_dataset.ipynb)**
