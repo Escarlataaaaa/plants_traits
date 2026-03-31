@@ -1,4 +1,17 @@
 # plants_traits
+
+## Plants traits folder
+- **[cleaning](cleaning/)**
+  Compilation of files of cleaning different datasets.
+
+- **[ssd_and_wood_density](plants_traits/ssd_and_wood_density.ipynb)**
+  Compare whether we can combine ssd and wood density as one trait.
+  
+- **[meta_trait_dataset](plants_traits/meta_trait_dataset.ipynb)**
+  Combine all plants traits available into one dataset.
+  
+
+
 ## Maxent range folder
 - **[choose_best_threshold](maxent_range/choose_best_threshold.R)**
   Test different threshold and compute a predicted native-range area for each species. Then compare with EOO and choose the threshold with strongest log-correlation.
