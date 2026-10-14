@@ -23,5 +23,8 @@
   Computes one centroid per species. If maxent predictions exist, computes a centroid weighted by prediction intensity within native region. If not, compute unweighted centroid from native-region cells.
   
 - **[map_maxent](maxent_range/map_maxent.R)**
-  Visualization of all species centroids on world map with colors for threat status. 
+  Visualization of all species centroids on world map with colors for threat status.
+
+- **[bioclim centroid](maxent_range/bioclim_centroid.R)**
+  Calculates each BIO variable’s mean across the species’ native range, weighted by its continuous Maxent suitability values.
   
